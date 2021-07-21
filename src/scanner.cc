@@ -2,10 +2,14 @@
 #include <cassert>
 
 namespace {
-  enum TokenType {
+  enum class TokenType {
     TURNSTILE,
     ARROW
   };
+
+  TSSymbol to_symbol(TokenType e) {
+    return static_cast<TSSymbol>(e);
+  }
 
   struct Scanner {
     enum class LexState {
@@ -16,7 +20,7 @@ namespace {
     };
 
     bool scan(TSLexer* const lexer, const bool* const valid_symbols) {
-      if (!(valid_symbols[TURNSTILE] || valid_symbols[ARROW])) {
+      if (!(valid_symbols[to_symbol(TokenType::TURNSTILE)] || valid_symbols[to_symbol(TokenType::ARROW)])) {
         return false;
       }
 
@@ -35,10 +39,10 @@ namespace {
           END_STATE();
         case LexState::TURNSTILE:
           if ('>' == lookahead) ADVANCE(LexState::ARROW);
-          ACCEPT_TOKEN(TURNSTILE);
+          ACCEPT_TOKEN(to_symbol(TokenType::TURNSTILE));
           END_STATE();
         case LexState::ARROW:
-          ACCEPT_TOKEN(ARROW);
+          ACCEPT_TOKEN(to_symbol(TokenType::ARROW));
           END_STATE();
         default:
           return false;
