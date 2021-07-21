@@ -8,29 +8,40 @@ namespace {
   };
 
   struct Scanner {
+    enum class LexState {
+      CONSUME_LEADING_SPACE,
+      VERTICAL_BAR,
+      TURNSTILE,
+      ARROW
+    };
+
     bool scan(TSLexer* const lexer, const bool* const valid_symbols) {
-      if (valid_symbols[TURNSTILE] || valid_symbols[ARROW]) {
-        while (lexer->lookahead == ' ') {lexer->advance(lexer, true);}
-        if (lexer->lookahead == '|') {
-          lexer->advance(lexer, false);
-          if (lexer->lookahead == '-') {
-            lexer->advance(lexer, false);
-            if (lexer->lookahead == '>') {
-              lexer->advance(lexer, false);
-              lexer->result_symbol = ARROW;
-              return true;
-            } else {
-              lexer->result_symbol = TURNSTILE;
-              return true;
-            }
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      } else {
+      if (!(valid_symbols[TURNSTILE] || valid_symbols[ARROW])) {
         return false;
+      }
+
+      LexState state = LexState::CONSUME_LEADING_SPACE;
+      START_LEXER();
+      switch (state) {
+        case LexState::CONSUME_LEADING_SPACE:
+          if (' ' == lookahead) SKIP(LexState::CONSUME_LEADING_SPACE);
+          if ('\t' == lookahead) SKIP(LexState::CONSUME_LEADING_SPACE);
+          if ('\r' == lookahead) SKIP(LexState::CONSUME_LEADING_SPACE);
+          if ('\n' == lookahead) SKIP(LexState::CONSUME_LEADING_SPACE);
+          if ('|' == lookahead) ADVANCE(LexState::VERTICAL_BAR);
+          END_STATE();
+        case LexState::VERTICAL_BAR:
+          if ('-' == lookahead) ADVANCE(LexState::TURNSTILE);
+          END_STATE();
+        case LexState::TURNSTILE:
+          if ('>' == lookahead) ADVANCE(LexState::ARROW);
+          ACCEPT_TOKEN(TURNSTILE);
+          END_STATE();
+        case LexState::ARROW:
+          ACCEPT_TOKEN(ARROW);
+          END_STATE();
+        default:
+          return false;
       }
     }
   };
