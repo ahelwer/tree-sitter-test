@@ -1,1 +1,4 @@
-n \in Nat |-> x
+n \in Nat |-> 1
+n < Nat
+<1> A
+<2> B
