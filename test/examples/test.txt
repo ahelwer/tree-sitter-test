@@ -1,4 +1,6 @@
-n \in Nat |-> 1
-n < Nat
+a < b
+c < d
 <1> A
 <2> B
+e < f
+g < h
