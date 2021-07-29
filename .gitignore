@@ -1,6 +1,7 @@
 node_modules
 src
 package-lock.json
+*.wasm
 bindings
 Cargo.toml
 build
