@@ -2,7 +2,7 @@ module.exports = grammar({
   name: 'test',
 
   conflicts: $ => [
-    [$.unit, $.lt],
+    [$._unit, $.lt],
     [$.proof_step, $.lt],
   ],
 
@@ -11,8 +11,8 @@ module.exports = grammar({
   ],
 
   rules: {
-    source_file: $ => repeat($.unit),
-    unit: $ => choice($.proof, $._expr),
+    source_file: $ => repeat($._unit),
+    _unit: $ => choice($.proof, $._expr),
     proof: $ => prec.right(repeat1($.proof_step)),
     proof_step: $ => seq($.proof_token, $._expr),
     _expr: $ => choice($.identifier, $.number, $._infix_op),
@@ -26,11 +26,9 @@ module.exports = grammar({
     number: $ => /\d+/,
     proof_token: $ => prec.dynamic(1, seq(
       '<',
-      $.proof_level,
+      alias(token.immediate(/\d+/), $.level),
       token.immediate('>'),
-      $.proof_name,
+      alias(token.immediate(/\w*/), $.name),
     )),
-    proof_level: $ => token.immediate(/\d+/),
-    proof_name: $ => token.immediate(/\w*/)
   }
 });
