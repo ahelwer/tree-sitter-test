@@ -1,7 +1,11 @@
 module.exports = grammar({
   name: 'test',
+  
+  externals: $ => [
+    $.token
+  ],
 
   rules: {
-    source_file: $ => token(repeat1(seq('a', '\0')))
+    source_file: $ => repeat1($.token)
   }
 });
