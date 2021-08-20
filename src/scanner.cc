@@ -52,6 +52,7 @@ extern "C" {
         if ('a' == lookahead) ADVANCE(State::A);
         END_STATE();
       case (State::A):
+        if (eof) SKIP(State::END_OF_FILE);
         if (0 == lookahead) ADVANCE(State::A_NULL);
         END_STATE();
       case (State::A_NULL):
