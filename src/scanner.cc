@@ -57,6 +57,7 @@ extern "C" {
         END_STATE();
       case (State::A_NULL):
         ACCEPT_TOKEN(TOKEN);
+        if ('a' == lookahead) ADVANCE(State::A);
         END_STATE();
       case (State::END_OF_FILE):
         END_STATE();

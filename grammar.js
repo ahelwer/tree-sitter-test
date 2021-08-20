@@ -6,6 +6,6 @@ module.exports = grammar({
   ],
 
   rules: {
-    source_file: $ => repeat1($.token)
+    source_file: $ => $.token
   }
 });
