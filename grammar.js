@@ -7,7 +7,7 @@ module.exports = grammar({
     string: $ => seq(
       '"',
       repeat(choice(
-        token.immediate(/[^"]/),
+        token.immediate(/[^\n"]/),
         $.escape_char
       )),
       token.immediate('"')
