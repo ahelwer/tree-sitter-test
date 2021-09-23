@@ -2,10 +2,11 @@ module.exports = grammar({
   name: 'test',
   
   externals: $ => [
-    $.token
+    $.external_token
   ],
 
   rules: {
-    source_file: $ => $.token
+    source_file: $ => repeat(seq($.external_token, $.codepoint)),
+    codepoint: $ => choice('x', '∧')
   }
 });

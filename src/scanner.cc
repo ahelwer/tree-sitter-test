@@ -1,68 +1,25 @@
 #include <tree_sitter/parser.h>
-#include <cwctype>
-#include <cassert>
+#include <cstdio>
 
 enum TokenType {
-  TOKEN
+  EXTERNAL_TOKEN
 };
 
 extern "C" {
-  void * tree_sitter_test_external_scanner_create() {
-    return NULL;
-  }
-
-  void tree_sitter_test_external_scanner_destroy(void *payload) {
-    // ...
-  }
-
-  unsigned tree_sitter_test_external_scanner_serialize(
-    void *payload,
-    char *buffer
-  ) {
-    return 0;
-  }
-
-  void tree_sitter_test_external_scanner_deserialize(
-    void *payload,
-    const char *buffer,
-    unsigned length
-  ) {
-    // ...
-  }
-
-  enum class State {
-    CONSUME,
-    A,
-    A_NULL,
-    END_OF_FILE
-  };
+  void * tree_sitter_test_external_scanner_create() { return NULL; }
+  void tree_sitter_test_external_scanner_destroy(void *payload) {}
+  unsigned tree_sitter_test_external_scanner_serialize(void *payload, char *buffer) { return 0; }
+  void tree_sitter_test_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {}
 
   bool tree_sitter_test_external_scanner_scan(
     void *payload,
     TSLexer *lexer,
     const bool *valid_symbols
   ) {
-    State state = State::CONSUME;
-    START_LEXER();
-    eof = lexer->eof(lexer);
-    switch (state) {
-      case (State::CONSUME):
-        if (eof) SKIP(State::END_OF_FILE);
-        if (iswspace(lookahead)) SKIP(State::CONSUME);
-        if ('a' == lookahead) ADVANCE(State::A);
-        END_STATE();
-      case (State::A):
-        if (eof) SKIP(State::END_OF_FILE);
-        if (0 == lookahead) ADVANCE(State::A_NULL);
-        END_STATE();
-      case (State::A_NULL):
-        ACCEPT_TOKEN(TOKEN);
-        if ('a' == lookahead) ADVANCE(State::A);
-        END_STATE();
-      case (State::END_OF_FILE):
-        END_STATE();
-      default:
-        END_STATE();
-    }
+    while (' ' == lexer->lookahead) { lexer->advance(lexer, true); }
+    uint32_t col = lexer->get_column(lexer);
+    printf("NEXT: [%X] COL: [%d]\n", lexer->lookahead, col);
+    printf("MATCH? [%d] [%d] [%d]\n", L'∧', L'\u2227', '\u2227' == lexer->lookahead);
+    return !lexer->eof(lexer);
   }
 }
