@@ -1,0 +1,9 @@
+[package]
+name = "scratch"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tree-sitter-test = {path = "../"}
+tree-sitter = "0.22.2"
+
