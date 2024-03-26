@@ -1,0 +1,38 @@
+[
+  {
+    "type": "def_eq",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "def_eq",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "==",
+    "named": false
+  },
+  {
+    "type": "expr",
+    "named": false
+  },
+  {
+    "type": "op",
+    "named": false
+  },
+  {
+    "type": "≜",
+    "named": false
+  }
+]
